@@ -1,0 +1,33 @@
+name: Demo Pipeline
+
+env:               
+  API_KEY: "{{env.API_KEY}}"
+
+steps:
+  - name: Build
+    type: shell
+    command: echo "Building..." && sleep 2 && echo "Done"
+    continue_on_error: false
+
+  - name: Test A
+    type: shell
+    command: echo "Simulating pytest - all tests passed" && exit 0
+    continue_on_error: true
+
+  - name: Test B (parallel friendly)
+    type: python
+    code: |
+      print("Running inline Python")
+      import time
+      time.sleep(1.5)
+      results["Test B"] = {"result": 42}
+
+  - name: Notify API
+    type: http
+    method: POST
+    url: https://httpbin.org/post
+    json:
+      message: "Pipeline finished"
+      value: "{{ steps['Test B'].result }}"
+    headers:
+      Authorization: Bearer {{env.API_KEY}}

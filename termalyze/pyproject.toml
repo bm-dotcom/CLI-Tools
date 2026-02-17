@@ -1,0 +1,12 @@
+[project]
+name = "termalyze"
+version = "0.1.0"
+description = "Beautiful terminal CSV / data quick analyzer"
+requires-python = ">=3.9"
+dependencies = [
+    "typer[all]",
+    "rich",
+]
+
+[project.scripts]
+termalyze = "termalyze.main:app"
